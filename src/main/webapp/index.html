@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>LiveTrack</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Simple live tracking application">
+
+    <!-- Le styles -->
+    <link href="css/bootstrap.css" rel="stylesheet">
+    <style>
+        body {
+        padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
+        }
+    </style>
+    <link href="css/bootstrap-responsive.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-inverse navbar-fixed-top">
+    <div class="navbar-inner">
+        <div class="container">
+            <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="brand" href="#">Livetrack</a>
+            <div class="nav-collapse collapse">
+                <ul class="nav">
+                    <li class="active"><a href="#">Home</a></li>
+                </ul>
+            </div><!--/.nav-collapse -->
+        </div>
+    </div>
+</div>
+
+<div class="container">
+
+    <h2>Livetrack</h2>
+    <p>This application is a simple demo live tracker for locus (and for any other application.)
+    <ul>
+        <li>Registration are not required you can use any string as a key of one tracking.</li>
+        <li>The application stores only the latest position for a specific key, and it could be shown on the map.</li>
+        <li>The store is not persistent. Every data will be deleted with the next restart.</li>
+        <li>All pages are public and anonym.</li>
+    </ul>
+    <h2>API</h2>
+    <h3>UPDATE</h3>
+    <pre>curl --data "lat=47&lon=19" http://http://livetrack-anzix.rhcloud.com/api/point/{KEY}</pre>
+    <h3>GET</h3>
+    <pre>curl http://http://livetrack-anzix.rhcloud.com/api/point/{KEY}</pre>
+    <h2>MAP</h2>
+    <p>http://livetrack-anzix.rhcloud.com/map/{KEY}</p>
+    <div class="alert"><strong>Note</strong>: Use any string instead of {KEY}. As every page is public use complex keys if you need pseudo-private page.</div>
+
+</div> <!-- /container -->
+</body>
+</html>

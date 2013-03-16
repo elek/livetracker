@@ -1,0 +1,36 @@
+apply plugin: 'war'
+apply plugin: 'jetty'
+apply plugin: 'application'
+apply plugin: 'idea'
+apply plugin: 'idea'
+
+
+applicationName = "livetrack"
+mainClassName = "net.anzix.livetrack.Starter"
+
+repositories {
+    mavenCentral()
+}
+
+compileJava.options.encoding = 'utf-8'
+
+dependencies {
+    compile 'com.google.sitebricks:sitebricks:0.8.7'
+    compile 'javax.servlet:servlet-api:2.5'
+    //compile 'org.eclipse.jetty:jetty-servlet:7.5.3.v20111011'
+    //compile 'org.eclipse.jetty:jetty-servlet:9.0.0.RC0'
+
+}
+
+ENV = System.getenv();
+httpPort = Integer.parseInt(ENV['PORT']!=null?ENV['PORT']:"8888")
+
+jettyRun {
+   contextPath = "/"
+}
+
+task stage(dependsOn: ['clean', 'installApp'])
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '1.4'
+}
