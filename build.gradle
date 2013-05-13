@@ -16,7 +16,11 @@ compileJava.options.encoding = 'utf-8'
 
 dependencies {
     compile 'com.google.sitebricks:sitebricks:0.8.7'
+    compile 'com.google.sitebricks:sitebricks-channel:0.8.7'
     compile 'javax.servlet:servlet-api:2.5'
+    runtime 'ch.qos.logback:logback-classic:1.0.12'
+    runtime 'org.eclipse.jetty.websocket:websocket-servlet:9.0.3.v20130506'
+    runtime 'org.eclipse.jetty:jetty-server:9.0.3.v20130506'
     //compile 'org.eclipse.jetty:jetty-servlet:7.5.3.v20111011'
     //compile 'org.eclipse.jetty:jetty-servlet:9.0.0.RC0'
 

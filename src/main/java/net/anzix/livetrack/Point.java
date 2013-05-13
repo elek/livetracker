@@ -1,6 +1,5 @@
 package net.anzix.livetrack;
 
-import java.lang.String;
 import java.util.Date;
 
 /**
@@ -44,6 +43,12 @@ public class Point {
     }
 
     public Date getDate() {
-	return this.date;
+        return this.date;
     }
+
+    public String encode() {
+        return lat + "," + lon + "," + lon;
+    }
+
+
 }
