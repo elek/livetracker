@@ -70,7 +70,11 @@ public class PointResource {
         if (lat == null) {
             return Reply.with("alt is required.").status(500).as(Json.class);
         }
+        updatePosition(key, clientId, lat, lon, alt);
+        return Reply.with("OK").status(200).as(Json.class);
+    }
 
+    private void updatePosition(String key, String clientId, String lat, String lon, String alt) {
         store.addPoint(key, clientId, new Point(lat, lon, alt));
         if (subscriptionList.get(key) != null) {
             for (String subscriberSocketId : subscriptionList.get(key)) {
@@ -81,7 +85,6 @@ public class PointResource {
                 }
             }
         }
-        return Reply.with("OK").status(200).as(Json.class);
     }
 
     @Observe
@@ -92,6 +95,10 @@ public class PointResource {
             String id = idtopic[0].trim();
 
             subscribe(id, topic);
+        } else if (message.startsWith("POS")) {
+            String[] tokens = message.substring("POS".length() + 1).trim().split(",");
+            LOG.debug("Position update is requested: "+message);
+            updatePosition(tokens[0], tokens[1], tokens[2], tokens[3], tokens[4]);
         }
     }
 

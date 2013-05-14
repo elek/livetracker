@@ -2,9 +2,18 @@ var lastData;
 var markers = {};
 var popups = {};
 var markerLayer
-
-
+var sock
+var sendingTask
 var map;
+var mapId = window.location.href.substr(window.location.href.search("map")+4);
+
+function sendPosition(position){
+   sock.send(null,"POS " + mapId + "," + sitebricks.SOCKET_ID + "," + position.coords.latitude + "," + position.coords.longitude +",0")
+}
+
+function sending(){
+   navigator.geolocation.getCurrentPosition(sendPosition);
+}
 function initMap() {
    map  = L.map('map');
    var osmUrl='http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
@@ -34,10 +43,22 @@ function initMap() {
        });
        sock.on('connect', function() {
          console.log('websocket connected!');
-         sock.send(null, "SUB " + sitebricks.SOCKET_ID +",qwe")
+         sock.send(null, "SUB " + sitebricks.SOCKET_ID +"," + mapId)
        });
        sock.on('disconnect', function() {
          console.log('websocket disconnected!');
+       });
+
+       $("#share").click(function(){
+          if (!sendingTask) {
+             $("#share").removeClass("ui-body-a").addClass("ui-body-c");
+             sendingTask = window.setInterval(sending, 5000)
+          } else {
+             $("#share").removeClass("ui-body-c").addClass("ui-body-a");
+             window.clearInterval(sendingTask)
+             sendingTask = null
+          }
+
        });
 }
 
@@ -78,12 +99,13 @@ function updateMarker(id, lon, lat, updated) {
            map.setView([lat,lon],15)
            createMarker(id,lon,lat, updated)
         }
-
         var marker = markers[id]
         marker.bindPopup("<p>id: " + id + "</p>");
         marker.setLatLng([lat,lon])
-
 }
+
+
+
 
 
 
