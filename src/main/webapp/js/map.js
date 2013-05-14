@@ -42,33 +42,35 @@ function createMap(key){
     markers.addMarker(marker);
     
 
-    var refresh = function(){
-        $.getJSON('api/point/'+key,function(data){
-            if (data == null) {
-                return
-            }
-            lastData = data
-            var lonLat = new OpenLayers.LonLat( parseFloat(data.lon), parseFloat(data.lat));
-            lonLat = lonLat.transform(
-		new OpenLayers.Projection("EPSG:4326"), // transform from WGS 1984
-		map.getProjectionObject() // to Spherical Mercator Projection
+    var refresh = function(lon,lat,updated){
+        var lonLat = new OpenLayers.LonLat(lon, lat);
+        lonLat = lonLat.transform(new OpenLayers.Projection("EPSG:4326"),map.getProjectionObject());
 
-            );
-	    
-	    
 	    popup.moveTo(map.getLayerPxFromLonLat(lonLat))
 	    marker.moveTo(map.getLayerPxFromLonLat(lonLat))
-	    updated = new Date(data.date);
 	    popup.setContentHTML("<center><p>updated: "+updated.toISOString()+"</p></center>");
 	    map.setCenter (lonLat, map.getZoom());
 	    marker.display(true);
 	    markers.redraw()
-	    
-	    
-	    
-	})
     }
-    refresh();
-    setInterval(refresh,5000)
+
+    sock = new sitebricks.Channel('/livetracker');
+    sock.connect();
+
+    sock.on('message', function(data) {
+       console.log(data)
+       lastData = JSON.parse(JSON.parse(data));
+       console.log(lastData)
+       refresh(lastData.point.lon,lastData.point.lat, new Date(lastData.point.date))
+
+    });
+    sock.on('connect', function() {
+      console.log('websocket connected!');
+      sock.send(null, "SUB " + sitebricks.SOCKET_ID +",qwe")
+    });
+    sock.on('disconnect', function() {
+      console.log('websocket disconnected!');
+    });
+
     
 }

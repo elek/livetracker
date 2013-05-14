@@ -17,6 +17,8 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.List;
 
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 
@@ -30,7 +32,15 @@ public class PointResource {
 
     private static final Logger LOG = LoggerFactory.getLogger(PointResource.class);
 
+    /**
+     * Connected socketIds.
+     */
     private final List<String> connected = new CopyOnWriteArrayList<String>();
+
+    /**
+     * Subscription channel -> socketId.
+     */
+    private final Map<String,String> subscriptionList = new ConcurrentHashMap<String,String>();
 
     private String lat;
 
@@ -62,16 +72,23 @@ public class PointResource {
         }
 
         store.addPoint(key, new Point(lat, lon, alt));
-        for (String socketId : connected) {
-            switchboard.named(socketId).send(key + "," + lat + "," + lon);
+        String subscriberSocketId = subscriptionList.get(key);
+        if (subscriberSocketId != null) {
+           LOG.debug("Sending notification to " + subscriberSocketId);
+           //TODO use JSON library
+           switchboard.named(subscriberSocketId).send("{ \"point\" : { \"lat\" : " + lat + ", \"lon\" : " + lon + ",\"date\" : \"2013-05-14T13:13:21.237Z\"}}");
         }
         return Reply.with("OK").status(200).as(Json.class);
     }
 
     @Observe
     public void receiveUpdate(String message) {
-        for (String socketId : connected) {
-
+        if (message.startsWith("SUB")) {
+            String[] idtopic = message.substring("SUB".length() + 1).trim().split(",");
+            String topic = idtopic[1].trim();
+            String id = idtopic[0].trim();
+            LOG.debug("Client " + id + " is subscribing for the data " + topic);
+            subscriptionList.put(topic, id);
         }
     }
 
