@@ -49,12 +49,13 @@
     </ul>
     <h2>API</h2>
     <h3>UPDATE</h3>
-    <pre>curl --data "lat=47&lon=19" http://http://livetrack-anzix.rhcloud.com/api/point/{KEY}</pre>
+    <pre>curl --data "lat=47&lon=19" ${url}api/point/{MAP_KEY}/{CLIENT_KEY}</pre>
     <h3>GET</h3>
-    <pre>curl http://http://livetrack-anzix.rhcloud.com/api/point/{KEY}</pre>
+    <pre>curl ${url}api/point/{MAP_KEY}</pre>
     <h2>MAP</h2>
-    <p>http://livetrack-anzix.rhcloud.com/map/{KEY}</p>
-    <div class="alert"><strong>Note</strong>: Use any string instead of {KEY}. As every page is public use complex keys if you need pseudo-private page.</div>
+    <p><a href="${url}map/example">${url}map/{MAPKEY}</a></p>
+    <div class="alert"><strong>Note</strong>: Use any string instead of {MAP_KEY}. As every page is public: use complex keys if you need pseudo-private page.
+        CLIENT_KEY also could be any string. It identifies the client, so more than one client could post positions to the same map.</div>
 
 </div> <!-- /container -->
 </body>
