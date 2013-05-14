@@ -77,7 +77,7 @@ public class PointResource {
                 LOG.debug("Sending notification to " + subscriberSocketId);
                 //TODO use JSON library
                 if (switchboard.named(subscriberSocketId) != null) {
-                    switchboard.named(subscriberSocketId).send("{ \"point\" : { \"lat\" : " + lat + ", \"lon\" : " + lon + ",\"date\" : \"2013-05-14T13:13:21.237Z\"}}");
+                    switchboard.named(subscriberSocketId).send("{ \"id\":\""+subscriberSocketId+"\",\"point\" : { \"lat\" : " + lat + ", \"lon\" : " + lon + ",\"date\" : \"2013-05-14T13:13:21.237Z\"}}");
                 }
             }
         }
