@@ -1,9 +1,6 @@
 apply plugin: 'war'
-apply plugin: 'jetty'
 apply plugin: 'application'
 apply plugin: 'idea'
-apply plugin: 'idea'
-
 
 applicationName = "livetrack"
 mainClassName = "net.anzix.livetrack.Starter"
@@ -24,22 +21,14 @@ dependencies {
     }
     compile 'javax.servlet:servlet-api:2.5'
     runtime 'ch.qos.logback:logback-classic:1.0.12'
-//    compile 'org.eclipse.jetty.websocket:websocket-servlet:9.0.3.v20130506'    
-//    compile 'org.eclipse.jetty.websocket:websocket-api:9.0.3.v20130506'
-
-      
-//    runtime 'org.eclipse.jetty:jetty-server:9.0.3.v20130506'
-    //compile 'org.eclipse.jetty:jetty-servlet:7.5.3.v20111011'
-    //compile 'org.eclipse.jetty:jetty-servlet:9.0.0.RC0'
-
 }
 
 ENV = System.getenv();
 httpPort = Integer.parseInt(ENV['PORT']!=null?ENV['PORT']:"8888")
 
-jettyRun {
+/*jettyRun {
    contextPath = "/"
-}
+}*/
 
 task stage(dependsOn: ['clean', 'installApp'])
 
