@@ -73,8 +73,12 @@ function createMap(key){
         updateMarker(id, lonLat, updated)
 
     }
-    sitebricks.BASE_URL = "http://localhost:8080/livetracker/"
-    sock = new sitebricks.Channel('/livetracker');
+
+    context = document.location.pathname.substring(0,document.location.pathname.search("map")-1)
+    if (context.length == 0) {
+       context = "/"
+    }
+    sock = new sitebricks.Channel(context);
     sock.connect();
 
     sock.on('message', function(data) {
