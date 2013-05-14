@@ -7,6 +7,21 @@ var sendingTask
 var map;
 var mapId = window.location.href.substr(window.location.href.search("map")+4);
 
+function timeAgeString(date) {
+   var t = Math.round((new Date().getTime() - date) / 1000)
+   if (t < 60) {
+      return t + " secs ago";
+   }
+   t = Math.round(t / 60)
+   if (t < 60) {
+       return t + " mins ago";
+   }
+   t = Math.round(t / 60)
+   if (t < 60) {
+          return t + " hours ago";
+   }
+   return "outdated"
+}
 function sendPosition(position){
    sock.send(null,"POS " + mapId + "," + sitebricks.SOCKET_ID + "," + position.coords.latitude + "," + position.coords.longitude +",0")
 }
@@ -100,7 +115,7 @@ function updateMarker(id, lon, lat, updated) {
            createMarker(id,lon,lat, updated)
         }
         var marker = markers[id]
-        marker.bindPopup("<p>id: " + id + "</p>");
+        marker.bindPopup("<p>id: " + id + "</p><p>updated: " +  updated.toLocaleTimeString() + "</p>");
         marker.setLatLng([lat,lon])
 }
 

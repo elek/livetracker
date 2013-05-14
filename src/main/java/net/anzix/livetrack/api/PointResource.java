@@ -15,7 +15,9 @@ import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -81,7 +83,7 @@ public class PointResource {
                 LOG.debug("Sending notification to " + subscriberSocketId);
                 //TODO use JSON library
                 if (switchboard.named(subscriberSocketId) != null) {
-                    switchboard.named(subscriberSocketId).send("{ \"id\":\""+clientId+"\",\"point\" : { \"lat\" : " + lat + ", \"lon\" : " + lon + ",\"date\" : \"2013-05-14T13:13:21.237Z\"}}");
+                    switchboard.named(subscriberSocketId).send("{ \"id\":\""+clientId+"\",\"point\" : { \"lat\" : " + lat + ", \"lon\" : " + lon + ",\"date\" : " + new Date().getTime() + "}}");
                 }
             }
         }
