@@ -53,7 +53,7 @@ function createMap(key){
 	    marker.display(true);
 	    markers.redraw()
     }
-
+    sitebricks.BASE_URL = "http://localhost:8080/livetracker/"
     sock = new sitebricks.Channel('/livetracker');
     sock.connect();
 
