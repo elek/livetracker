@@ -2,36 +2,85 @@ apply plugin: 'war'
 apply plugin: 'application'
 apply plugin: 'idea'
 
+apply plugin: 'pmd'
+apply plugin: 'build-dashboard'
+apply plugin: 'checkstyle'
+apply plugin: CodestylePlugin
+
+
 applicationName = "livetrack"
 mainClassName = "net.anzix.livetrack.Starter"
 
+class CodestylePlugin implements Plugin<Project> {
+
+  void apply(Project project) {
+    def checkstyle = project.file("$project.buildDir/checkstyle.xml")
+    project.task('codestyleDownload') << {
+
+      if (!checkstyle.exists()) {
+	project.ant.get(src: "https://raw.github.com/elek/codestyle/master/checkstyle.xml", dest: checkstyle)
+      }
+      checkstylexsl = project.file("${project.buildDir}/checkstyle.xsl")
+      if (!checkstylexsl.exists()) {
+	project.ant.get(src: "https://raw.github.com/elek/codestyle/master/checkstyle.xsl", dest: checkstylexsl)
+      }
+    }
+
+    project.checkstyleMain.dependsOn(project.codestyleDownload)
+
+    project.gradle.taskGraph.afterTask { Task task, TaskState state ->
+      if(task.name == 'checkstyleMain') {
+	println " Cleanup.............";
+	if (project.file("${project.buildDir}/reports/checkstyle/main.xml").exists()) {
+	  project.ant.xslt(in: "${project.buildDir}/reports/checkstyle/main.xml", 
+	  style:"${project.buildDir}/checkstyle.xsl", 
+	  out:"${project.buildDir}/reports/checkstyle/checkstyle_main.html"
+			  )
+	}
+      }
+    }
+
+
+    project.checkstyle {
+      configFile = checkstyle
+    }
+
+
+  }
+}
+
+
+
+
+
+
 repositories {
-    mavenCentral()
+  mavenCentral()
 }
 
 compileJava.options.encoding = 'utf-8'
 
 dependencies {
-    compile 'com.google.sitebricks:sitebricks:0.8.8'
-    compile('com.google.sitebricks:sitebricks-channel:0.8.8'){
-    	    exclude module: 'jetty-websocket'
-	    exclude module: 'jetty-continuation'
-	    exclude group:  'com.google.appengine'
-	    
-    }
-    compile 'javax.servlet:servlet-api:2.5'
-    runtime 'ch.qos.logback:logback-classic:1.0.12'
+  compile 'com.google.sitebricks:sitebricks:0.8.8'
+  compile('com.google.sitebricks:sitebricks-channel:0.8.8'){
+    exclude module: 'jetty-websocket'
+    exclude module: 'jetty-continuation'
+    exclude group:  'com.google.appengine'	    
+  }
+  compile 'javax.servlet:servlet-api:2.5'
+  runtime 'ch.qos.logback:logback-classic:1.0.12'
 }
 
 ENV = System.getenv();
 httpPort = Integer.parseInt(ENV['PORT']!=null?ENV['PORT']:"8888")
 
-/*jettyRun {
-   contextPath = "/"
-}*/
-
 task stage(dependsOn: ['clean', 'installApp'])
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '1.4'
+  gradleVersion = '1.4'
 }
+
+
+
+
+
