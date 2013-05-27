@@ -18,7 +18,7 @@ public class Index {
     private String url;
 
     @Get
-    public void get(){
+    public void get() {
         this.url = request.getRequestURL().toString();
     }
 

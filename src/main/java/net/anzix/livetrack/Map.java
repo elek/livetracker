@@ -4,8 +4,9 @@ import com.google.inject.name.Named;
 import com.google.sitebricks.At;
 import com.google.sitebricks.http.Get;
 
-
-
+/**
+ * Backend bean for map pages.
+ */
 @At("/map/:key")
 public class Map {
 

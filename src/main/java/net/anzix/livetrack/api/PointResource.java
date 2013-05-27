@@ -15,7 +15,6 @@ import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -83,7 +82,9 @@ public class PointResource {
                 LOG.debug("Sending notification to " + subscriberSocketId);
                 //TODO use JSON library
                 if (switchboard.named(subscriberSocketId) != null) {
-                    switchboard.named(subscriberSocketId).send("{ \"id\":\""+clientId+"\",\"point\" : { \"lat\" : " + lat + ", \"lon\" : " + lon + ",\"date\" : " + new Date().getTime() + "}}");
+                    switchboard.named(subscriberSocketId).send("{ \"id\":\"" + clientId +
+                            "\",\"point\" : { \"lat\" : " + lat + ", \"lon\" : " + lon +
+                            ",\"date\" : " + new Date().getTime() + "}}");
                 }
             }
         }
@@ -99,7 +100,7 @@ public class PointResource {
             subscribe(id, topic);
         } else if (message.startsWith("POS")) {
             String[] tokens = message.substring("POS".length() + 1).trim().split(",");
-            LOG.debug("Position update is requested: "+message);
+            LOG.debug("Position update is requested: " + message);
             updatePosition(tokens[0], tokens[1], tokens[2], tokens[3], tokens[4]);
         }
     }
@@ -125,6 +126,9 @@ public class PointResource {
         this.alt = alt;
     }
 
+    /**
+     * Class to listen to the websocket connection.
+     */
     @Singleton
     public static class Listener implements ChannelListener {
 

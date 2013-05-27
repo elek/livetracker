@@ -1,7 +1,5 @@
 package net.anzix.livetrack;
 
-import net.anzix.livetrack.Point;
-import java.lang.String;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -11,12 +9,12 @@ import java.util.concurrent.ConcurrentHashMap;
 public class Store {
 
     /**
-     *  Last valid position per key.
+     * Last valid position per key.
      */
-    private Map<String, Map<String, Point>> points = new ConcurrentHashMap<String,Map<String,Point>>();
+    private Map<String, Map<String, Point>> points = new ConcurrentHashMap<String, Map<String, Point>>();
 
 
-    public void addPoint(String mapKey, String clientId, Point p){
+    public void addPoint(String mapKey, String clientId, Point p) {
         Map<String, Point> mapPoints = points.get(clientId);
         if (mapPoints == null) {
             mapPoints = new ConcurrentHashMap<String, Point>();
@@ -25,7 +23,7 @@ public class Store {
         mapPoints.put(mapKey, p);
     }
 
-    public Point getLastPoint(String mapKey, String clientId){
+    public Point getLastPoint(String mapKey, String clientId) {
         if (!points.containsKey(mapKey)) {
             return null;
         } else {
