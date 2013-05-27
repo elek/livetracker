@@ -1,58 +1,26 @@
+buildscript { 
+   repositories { 
+     maven { 
+       url "http://todo/repository"
+     }
+     dependencies { 
+       classpath 'net.anzix.build:gradle-plugins:1.0'
+     }
+   }
+}
 apply plugin: 'war'
 apply plugin: 'application'
 apply plugin: 'idea'
 
+//todo move them to anzix-quality
 apply plugin: 'pmd'
 apply plugin: 'build-dashboard'
 apply plugin: 'checkstyle'
-apply plugin: CodestylePlugin
+apply plugin: 'anzix-quality'
 
 
 applicationName = "livetrack"
 mainClassName = "net.anzix.livetrack.Starter"
-
-class CodestylePlugin implements Plugin<Project> {
-
-  void apply(Project project) {
-    def checkstyle = project.file("$project.buildDir/checkstyle.xml")
-    project.task('codestyleDownload') << {
-
-      if (!checkstyle.exists()) {
-	project.ant.get(src: "https://raw.github.com/elek/codestyle/master/checkstyle.xml", dest: checkstyle)
-      }
-      checkstylexsl = project.file("${project.buildDir}/checkstyle.xsl")
-      if (!checkstylexsl.exists()) {
-	project.ant.get(src: "https://raw.github.com/elek/codestyle/master/checkstyle.xsl", dest: checkstylexsl)
-      }
-    }
-
-    project.checkstyleMain.dependsOn(project.codestyleDownload)
-
-    project.gradle.taskGraph.afterTask { Task task, TaskState state ->
-      if(task.name == 'checkstyleMain') {
-	println " Cleanup.............";
-	if (project.file("${project.buildDir}/reports/checkstyle/main.xml").exists()) {
-	  project.ant.xslt(in: "${project.buildDir}/reports/checkstyle/main.xml", 
-	  style:"${project.buildDir}/checkstyle.xsl", 
-	  out:"${project.buildDir}/reports/checkstyle/checkstyle_main.html"
-			  )
-	}
-      }
-    }
-
-
-    project.checkstyle {
-      configFile = checkstyle
-    }
-
-
-  }
-}
-
-
-
-
-
 
 repositories {
   mavenCentral()
@@ -77,7 +45,7 @@ httpPort = Integer.parseInt(ENV['PORT']!=null?ENV['PORT']:"8888")
 task stage(dependsOn: ['clean', 'installApp'])
 
 task wrapper(type: Wrapper) {
-  gradleVersion = '1.4'
+  gradleVersion = '1.6'
 }
 
 
