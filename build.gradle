@@ -1,9 +1,9 @@
 buildscript { 
    repositories { 
      maven { 
-       url "http://zx.anzix.net/repo"
-     }
-     dependencies { 
+       url "https://s3-eu-west-1.amazonaws.com/anzixrepo"
+      }
+      dependencies { 
        classpath 'net.anzix.build:gradle-plugins:1.0-SNAPSHOT'
      }
    }
@@ -39,16 +39,13 @@ dependencies {
   runtime 'ch.qos.logback:logback-classic:1.0.12'
 }
 
-ENV = System.getenv();
-httpPort = Integer.parseInt(ENV['PORT']!=null?ENV['PORT']:"8888")
-
 task stage(dependsOn: ['clean', 'installApp'])
 
 task wrapper(type: Wrapper) {
   gradleVersion = '1.6'
 }
 
-
+}
 
 
 
